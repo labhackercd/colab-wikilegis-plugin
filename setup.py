@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Colab Wikilegis Plugin Colab plugin
+Colab Wikilegis Plugin
 ===================================
 """
 from setuptools import setup, find_packages
@@ -11,14 +11,14 @@ tests_require = ['mock']
 
 
 setup(
-    name="colab-wikilegis-plugin",
+    name="colab-wikilegis",
     version='0.1.0',
-    author='<<Author Name>>',
-    author_email='<<Author email>>',
-    url='<< project url/repo url >>',
-    description='Colab Wikilegis Plugin Colab plugin',
+    author='labhackercd',
+    author_email='labhackercd@gmail.com',
+    url='https://github.com/labhackercd/colab-wikilegis-plugin',
+    description='Colab Wikilegis Plugin',
     long_description=__doc__,
-    license='<< project license >>',
+    license='GPLv3',
     package_dir={'': 'src'},
     packages=find_packages('src'),
     zip_safe=False,
