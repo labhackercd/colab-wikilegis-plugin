@@ -1,0 +1,13 @@
+src/colab_wikilegis/__init__.py
+src/colab_wikilegis/apps.py
+src/colab_wikilegis/data_importer.py
+src/colab_wikilegis/models.py
+src/colab_wikilegis/search_indexes.py
+src/colab_wikilegis/urls.py
+src/colab_wikilegis/views.py
+src/colab_wikilegis.egg-info/PKG-INFO
+src/colab_wikilegis.egg-info/SOURCES.txt
+src/colab_wikilegis.egg-info/dependency_links.txt
+src/colab_wikilegis.egg-info/not-zip-safe
+src/colab_wikilegis.egg-info/requires.txt
+src/colab_wikilegis.egg-info/top_level.txt
