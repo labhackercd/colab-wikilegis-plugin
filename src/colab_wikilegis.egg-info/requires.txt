@@ -1,4 +1,0 @@
-colab
-
-[test]
-mock
