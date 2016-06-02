@@ -7,6 +7,8 @@ from django.conf import settings
 
 class Migration(migrations.Migration):
 
+    replaces = [(b'colab_wikilegis', '0001_initial'), (b'colab_wikilegis', '0002_auto_20160601_1706'), (b'colab_wikilegis', '0003_auto_20160601_1708')]
+
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
@@ -69,6 +71,18 @@ class Migration(migrations.Migration):
             model_name='wikilegissegment',
             name='type',
             field=models.ForeignKey(to='colab_wikilegis.WikilegisSegmentType'),
+            preserve_default=True,
+        ),
+        migrations.AlterField(
+            model_name='wikilegissegment',
+            name='number',
+            field=models.PositiveIntegerField(default=0),
+            preserve_default=True,
+        ),
+        migrations.AlterField(
+            model_name='wikilegissegment',
+            name='number',
+            field=models.PositiveIntegerField(default=0, null=True, blank=True),
             preserve_default=True,
         ),
     ]
