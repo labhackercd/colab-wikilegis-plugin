@@ -31,6 +31,7 @@ BILL_THEMES_CHOICES = (
     ('industria', _('Industry')),
     ('institucional', _('Institutional')),
     ('meio-ambiente', _('Environment')),
+    ('participacao_e_transparencia', _('Participation and Transparency')),
     ('politica', _('Policy')),
     ('previdencia', _('Foresight')),
     ('relacoes-exteriores', _('Foreign Affairs')),
@@ -52,6 +53,8 @@ class WikilegisBill(models.Model):
                               choices=BILL_STATUS_CHOICES, default='1')
     theme = models.CharField(max_length=255, choices=BILL_THEMES_CHOICES,
                              default='documento')
+    created = models.DateTimeField(editable=False)
+    modified = models.DateTimeField(editable=False)
 
     def get_url(self):
         prefix = helpers.get_plugin_prefix('colab_wikilegis', regex=False)
@@ -62,6 +65,9 @@ class WikilegisBill(models.Model):
 
     def get_theme(self):
         return self.get_theme_display()
+
+    def get_total_proposals(self):
+        return self.segments.filter(original=False).count()
 
 
 class WikilegisSegmentType(models.Model):
@@ -82,6 +88,8 @@ class WikilegisSegment(models.Model):
     type = models.ForeignKey('WikilegisSegmentType')
     number = models.PositiveIntegerField(default=0, null=True, blank=True)
     content = models.TextField()
+    created = models.DateTimeField(editable=False, auto_now_add=True)
+    modified = models.DateTimeField(editable=False, auto_now=True)
 
     def get_segment_type(self):
         return self.type.name
