@@ -46,12 +46,12 @@ BILL_THEMES_CHOICES = (
 class WikilegisBill(models.Model):
 
     id = models.IntegerField(primary_key=True)
-    title = models.CharField(max_length=255)
-    epigraph = models.CharField(max_length=255, null=True)
-    description = models.CharField(max_length=255)
-    status = models.CharField(max_length=255,
+    title = models.CharField(max_length=999)
+    epigraph = models.CharField(max_length=999, null=True)
+    description = models.CharField(max_length=999)
+    status = models.CharField(max_length=999,
                               choices=BILL_STATUS_CHOICES, default='1')
-    theme = models.CharField(max_length=255, choices=BILL_THEMES_CHOICES,
+    theme = models.CharField(max_length=999, choices=BILL_THEMES_CHOICES,
                              default='documento')
     created = models.DateTimeField(editable=False)
     modified = models.DateTimeField(editable=False)
@@ -73,7 +73,7 @@ class WikilegisBill(models.Model):
 class WikilegisSegmentType(models.Model):
 
     id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=999)
 
 
 class WikilegisSegment(models.Model):
@@ -107,7 +107,7 @@ class WikilegisComment(models.Model):
     id = models.IntegerField(primary_key=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     submit_date = models.DateTimeField()
-    content_type = models.CharField(max_length=255)
+    content_type = models.CharField(max_length=999)
     object_pk = models.IntegerField()
     comment = models.TextField()
 
