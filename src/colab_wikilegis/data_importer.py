@@ -1,5 +1,6 @@
 from requests.exceptions import ConnectionError
 from django.db.models.fields import DateTimeField
+from django.db import IntegrityError
 from colab.plugins.data import PluginDataImporter
 from django.utils.dateparse import parse_datetime
 from django.contrib.auth import get_user_model
@@ -51,6 +52,8 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
             obj = model_class.objects.get(id=data['id'])
         except model_class.DoesNotExist:
             obj = model_class()
+        except KeyError:
+            obj = model_class()
 
         for field in obj._meta.fields:
             try:
@@ -93,8 +96,9 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
     def fetch_segment_types(self):
         json_data = self.get_json_data('segment_types')
         for data in json_data:
-            comment = self.fill_object_data(models.WikilegisSegmentType, data)
-            comment.save()
+            segment_type = self.fill_object_data(models.WikilegisSegmentType,
+                                                 data)
+            segment_type.save()
 
     def fetch_bills(self):
         json_data = self.get_json_data('bills')
@@ -104,8 +108,15 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
 
     def fetch_segments(self):
         json_data = self.get_json_data('segments')
+        retry_segments = []
         for data in json_data:
             segment = self.fill_object_data(models.WikilegisSegment, data)
+            try:
+                segment.save()
+            except IntegrityError:
+                retry_segments.append(segment)
+
+        for segment in retry_segments:
             segment.save()
 
     def fetch_comments(self):

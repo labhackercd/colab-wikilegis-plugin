@@ -22,7 +22,7 @@ class Command(BaseCommand):
 
             new_password = str(uuid.uuid4().get_hex()[0:10])
             new_user, created = User.objects.get_or_create(
-                username=user.username,
+                username=user.username[:30],
                 email=user.email,
                 first_name=user.first_name,
                 last_name=user.last_name
