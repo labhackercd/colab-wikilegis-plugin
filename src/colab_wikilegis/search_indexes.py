@@ -11,6 +11,8 @@ class WikilegisBillIndex(indexes.SearchIndex, indexes.Indexable):
     title = indexes.EdgeNgramField(model_attr='title')
     epigraph = indexes.EdgeNgramField(model_attr='epigraph', null=True)
     description = indexes.EdgeNgramField(model_attr='description')
+    reporting_member = indexes.EdgeNgramField(
+        model_attr='get_reporting_member')
     status = indexes.EdgeNgramField(model_attr='get_status')
     theme = indexes.EdgeNgramField(model_attr='get_theme')
     url = indexes.EdgeNgramField(model_attr='get_url')
@@ -34,6 +36,7 @@ class WikilegisSegmentIndex(indexes.SearchIndex, indexes.Indexable):
     segment_type = indexes.EdgeNgramField(model_attr='get_segment_type')
     content = indexes.EdgeNgramField(model_attr='content')
     parent = indexes.EdgeNgramField(model_attr='parent', null=True)
+    author = indexes.EdgeNgramField(model_attr='get_author', null=True)
     bill = indexes.EdgeNgramField(model_attr='get_bill')
     number = indexes.EdgeNgramField(model_attr='number', null=True)
     original = indexes.BooleanField(model_attr='original')

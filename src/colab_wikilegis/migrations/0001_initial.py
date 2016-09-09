@@ -16,13 +16,14 @@ class Migration(migrations.Migration):
             name='WikilegisBill',
             fields=[
                 ('id', models.IntegerField(serialize=False, primary_key=True)),
-                ('title', models.CharField(max_length=255)),
-                ('epigraph', models.CharField(max_length=255, null=True)),
-                ('description', models.CharField(max_length=255)),
-                ('status', models.CharField(default=b'1', max_length=255, choices=[(b'draft', 'Draft'), (b'published', 'Published'), (b'closed', 'Closed')])),
-                ('theme', models.CharField(default=b'documento', max_length=255, choices=[(b'documento', 'Others'), (b'adm-publica', 'Public Administration'), (b'agropecuaria', 'Farming'), (b'assistencia-social', 'Social Assistance'), (b'cidades', 'Cities'), (b'ciencia', 'Science'), (b'comunicacao', 'Communication'), (b'consumidor', 'Consumer'), (b'cultura', 'Culture'), (b'direito-e-justica', 'Law and Justice'), (b'direitos-humanos', 'Human Rights'), (b'economia', 'Economy'), (b'educacao', 'Education'), (b'esportes', 'Sports'), (b'familia', 'Family'), (b'industria', 'Industry'), (b'institucional', 'Institutional'), (b'meio-ambiente', 'Environment'), (b'participacao_e_transparencia', 'Participation and Transparency'), (b'politica', 'Policy'), (b'previdencia', 'Foresight'), (b'relacoes-exteriores', 'Foreign Affairs'), (b'saude', 'Health'), (b'seguranca', 'Security'), (b'trabalho', 'Work'), (b'transporte-e-transito', 'Transportation and Transit'), (b'turismo', 'Tourism')])),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
+                ('title', models.CharField(max_length=999)),
+                ('epigraph', models.CharField(max_length=999, null=True)),
+                ('description', models.CharField(max_length=999)),
+                ('status', models.CharField(default=b'1', max_length=999, choices=[(b'draft', 'Draft'), (b'published', 'Published'), (b'closed', 'Closed')])),
+                ('theme', models.CharField(default=b'documento', max_length=999, choices=[(b'documento', 'Others'), (b'adm-publica', 'Public Administration'), (b'agropecuaria', 'Farming'), (b'assistencia-social', 'Social Assistance'), (b'cidades', 'Cities'), (b'ciencia', 'Science'), (b'comunicacao', 'Communication'), (b'consumidor', 'Consumer'), (b'cultura', 'Culture'), (b'direito-e-justica', 'Law and Justice'), (b'direitos-humanos', 'Human Rights'), (b'economia', 'Economy'), (b'educacao', 'Education'), (b'esportes', 'Sports'), (b'familia', 'Family'), (b'industria', 'Industry'), (b'institucional', 'Institutional'), (b'meio-ambiente', 'Environment'), (b'participacao_e_transparencia', 'Participation and Transparency'), (b'politica', 'Policy'), (b'previdencia', 'Foresight'), (b'relacoes-exteriores', 'Foreign Affairs'), (b'saude', 'Health'), (b'seguranca', 'Security'), (b'trabalho', 'Work'), (b'transporte-e-transito', 'Transportation and Transit'), (b'turismo', 'Tourism')])),
+                ('created', models.DateTimeField(editable=False)),
+                ('modified', models.DateTimeField(editable=False)),
+                ('reporting_member', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
             options={
             },
@@ -33,7 +34,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.IntegerField(serialize=False, primary_key=True)),
                 ('submit_date', models.DateTimeField()),
-                ('content_type', models.CharField(max_length=255)),
+                ('content_type', models.CharField(max_length=999)),
                 ('object_pk', models.IntegerField()),
                 ('comment', models.TextField()),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
@@ -51,6 +52,7 @@ class Migration(migrations.Migration):
                 ('content', models.TextField()),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
+                ('author', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
                 ('bill', models.ForeignKey(related_name='segments', to='colab_wikilegis.WikilegisBill')),
                 ('parent', models.ForeignKey(related_name='children', blank=True, to='colab_wikilegis.WikilegisSegment', null=True)),
                 ('replaced', models.ForeignKey(related_name='substitutes', blank=True, to='colab_wikilegis.WikilegisSegment', null=True)),
@@ -63,7 +65,7 @@ class Migration(migrations.Migration):
             name='WikilegisSegmentType',
             fields=[
                 ('id', models.IntegerField(serialize=False, primary_key=True)),
-                ('name', models.CharField(max_length=255)),
+                ('name', models.CharField(max_length=999)),
             ],
             options={
             },
