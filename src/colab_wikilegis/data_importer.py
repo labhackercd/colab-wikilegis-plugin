@@ -66,6 +66,26 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
                     obj.user = user
                     continue
 
+                if field.name == 'author':
+                    author = data['author']
+                    print author
+                    if author:
+                        user = User.objects.get(email=author['email'])
+                    else:
+                        user = None
+                    obj.author = user
+                    continue
+
+                if field.name == 'reporting_member':
+                    reporting_member = data["reporting_member"]
+                    if reporting_member:
+                        user = User.objects.get(
+                            email=reporting_member['email'])
+                    else:
+                        user = None
+                    obj.user = user
+                    continue
+
                 if field.name == 'parent':
                     obj.parent_id = data['parent']
                     continue

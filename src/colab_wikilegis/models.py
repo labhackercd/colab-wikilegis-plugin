@@ -49,6 +49,7 @@ class WikilegisBill(models.Model):
     title = models.CharField(max_length=999)
     epigraph = models.CharField(max_length=999, null=True)
     description = models.CharField(max_length=999)
+    reporting_member = models.ForeignKey(User, null=True)
     status = models.CharField(max_length=999,
                               choices=BILL_STATUS_CHOICES, default='1')
     theme = models.CharField(max_length=999, choices=BILL_THEMES_CHOICES,
@@ -62,6 +63,12 @@ class WikilegisBill(models.Model):
 
     def get_status(self):
         return self.get_status_display()
+
+    def get_reporting_member(self):
+        if self.reporting_member:
+            return self.reporting_member.username
+        else:
+            return None
 
     def get_theme(self):
         return self.get_theme_display()
@@ -85,6 +92,7 @@ class WikilegisSegment(models.Model):
                                  null=True, blank=True)
     parent = models.ForeignKey('self', related_name='children',
                                null=True, blank=True)
+    author = models.ForeignKey(User, null=True)
     type = models.ForeignKey('WikilegisSegmentType')
     number = models.PositiveIntegerField(default=0, null=True, blank=True)
     content = models.TextField()
@@ -93,6 +101,14 @@ class WikilegisSegment(models.Model):
 
     def get_segment_type(self):
         return self.type.name
+
+    def get_author(self):
+        if self.author:
+            return self.author.username
+        elif self.bill.reporting_member:
+            return self.bill.reporting_member.username
+        else:
+            return ''
 
     def get_bill(self):
         return self.bill.title
@@ -112,7 +128,8 @@ class WikilegisComment(models.Model):
     comment = models.TextField()
 
     def get_author(self):
-        return User.objects.get(pk=self.user_id).username
+        user = User.objects.get(pk=self.user_id)
+        return user.username
 
     def get_parent_object(self):
         parent_obj = None
