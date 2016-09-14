@@ -36,8 +36,8 @@ class Command(BaseCommand):
 
                 print "Importing " + new_user.username
 
-                # if created:
-                #     self.send_email(new_user, new_password)
+                if created:
+                    self.send_email(new_user, new_password)
             except IntegrityError:
                 pass
 
