@@ -28,7 +28,7 @@ class Command(BaseCommand):
         colab_users = User.objects.all()
         for user in users:
             if not user.email in colab_users.values_list('email', flat=True):
-                username = set_username(slugify(user.username[:30]),
+                username = set_username(slugify(user.username[:25]),
                                         colab_users)
 
                 new_password = str(uuid.uuid4().get_hex()[0:10])
