@@ -5,9 +5,19 @@ from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
 from colab_wikilegis.data_importer import ColabWikilegisPluginDataImporter
+from random import randint
 import uuid
 
 User = get_user_model()
+
+
+def set_username(username, users):
+    usernames_in_db = users.filter(username=username)
+    usernames_in_db = usernames_in_db.values_list('username', flat=True)
+    if username in usernames_in_db:
+        return set_username(username + str(randint(1, 9)), users)
+    else:
+        return username
 
 
 class Command(BaseCommand):
@@ -17,15 +27,13 @@ class Command(BaseCommand):
         users = importer.fetch_users()
         colab_users = User.objects.all()
         for user in users:
-            try:
-                username_in_db = colab_users.filter(username=user.username)
-                username_in_db = username_in_db.exclude(email=user.email)
-                if username_in_db.count():
-                    user.username = user.username + str(username_in_db.count())
+            if not user.email in colab_users.values_list('email', flat=True):
+                username = set_username(slugify(user.username[:30]),
+                                        colab_users)
 
                 new_password = str(uuid.uuid4().get_hex()[0:10])
                 new_user, created = User.objects.get_or_create(
-                    username=slugify(user.username[:30]),
+                    username=username,
                     email=user.email,
                     first_name=user.first_name,
                     last_name=user.last_name
@@ -38,8 +46,6 @@ class Command(BaseCommand):
 
                 if created:
                     self.send_email(new_user, new_password)
-            except IntegrityError:
-                pass
 
     def send_email(self, user, password):
         html = render_to_string('emails/wikilegis_new_user.html',
