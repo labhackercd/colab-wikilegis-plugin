@@ -115,35 +115,55 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
 
     def fetch_segment_types(self):
         json_data = self.get_json_data('segment_types')
+        all_segment_types = []
         for data in json_data:
             segment_type = self.fill_object_data(models.WikilegisSegmentType,
                                                  data)
             segment_type.save()
+            all_segment_types.append(segment_type.id)
+
+        models.WikilegisSegmentType.objects.all().exclude(
+            id__in=all_segment_types).delete()
 
     def fetch_bills(self):
         json_data = self.get_json_data('bills')
+        all_bills = []
         for data in json_data:
             bill = self.fill_object_data(models.WikilegisBill, data)
             bill.save()
+            all_bills.append(bill.id)
+
+        models.WikilegisBill.objects.all().exclude(id__in=all_bills).delete()
 
     def fetch_segments(self):
         json_data = self.get_json_data('segments')
         retry_segments = []
+        all_segments = []
         for data in json_data:
             segment = self.fill_object_data(models.WikilegisSegment, data)
             try:
                 segment.save()
+                all_segments.append(segment.id)
             except IntegrityError:
                 retry_segments.append(segment)
 
         for segment in retry_segments:
             segment.save()
+            all_segments.append(segment.id)
+
+        models.WikilegisSegment.objects.all().exclude(
+            id__in=all_segments).delete()
 
     def fetch_comments(self):
         json_data = self.get_json_data('comments')
+        all_comments = []
         for data in json_data:
             comment = self.fill_object_data(models.WikilegisComment, data)
             comment.save()
+            all_comments.append(comment.id)
+
+        models.WikilegisComment.objects.all().exclude(
+            id__in=all_comments).delete()
 
     def fetch_users(self):
         json_data = self.get_json_data('users')
