@@ -4,4 +4,8 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <before css:theme-children="#template-head" css:content-children="head" />
     <before css:theme-children="#template-body" css:content-children="body" />
+
+    <drop css:content=".login-or-signup" />
+    <drop css:content=".language-selector" />
+    <drop css:content=".user-status" />
 </rules>
