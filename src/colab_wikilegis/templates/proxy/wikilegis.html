@@ -9,7 +9,7 @@
         {% block pagetitle %}E-Democracia{% endblock pagetitle %} - E-Democracia
       {% endblock title %}
     </title>
-    
+
     {# Favicon #}
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/favicon/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" href="{% static 'img/favicon/favicon-32x32.png' %}" sizes="32x32">
@@ -29,12 +29,12 @@
       <link rel="stylesheet" href="{% static 'scss/wikilegis/restyle.scss' %}" type="text/x-scss" />
     {% endcompress %}
   </head>
-  <body>
-  <nav class="navigation">
+  <body class="{% if 'report' in request.path %}report{% endif %}">
+  <nav class="navigation ">
     {% include "navigation.html" %}
   </nav>
     <div id="template-body">
-      
+
     </div>
     <script type="text/javascript" src="{% static 'js/scripts.js' %}"></script>
   </body>
