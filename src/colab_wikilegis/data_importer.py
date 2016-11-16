@@ -135,9 +135,10 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
 
         models.WikilegisBill.objects.all().exclude(id__in=all_bills).delete()
 
-    def fetch_segments(self):
-        json_data = self.get_json_data('segments')
-        retry_segments = []
+    def fetch_segments(self, json_data=None):
+        if not json_data:
+            json_data = self.get_json_data('segments')
+        retry = False
         all_segments = []
         for data in json_data:
             segment = self.fill_object_data(models.WikilegisSegment, data)
@@ -145,11 +146,11 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
                 segment.save()
                 all_segments.append(segment.id)
             except IntegrityError:
-                retry_segments.append(segment)
+                retry = True
+                continue
 
-        for segment in retry_segments:
-            segment.save()
-            all_segments.append(segment.id)
+        if retry:
+            self.fetch_segments(json_data)
 
         models.WikilegisSegment.objects.all().exclude(
             id__in=all_segments).delete()
