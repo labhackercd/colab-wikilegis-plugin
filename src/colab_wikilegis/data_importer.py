@@ -68,7 +68,6 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
 
                 if field.name == 'author':
                     author = data['author']
-                    print author
                     if author:
                         user = User.objects.get(email=author['email'])
                     else:
@@ -115,36 +114,29 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
 
     def fetch_segment_types(self):
         json_data = self.get_json_data('segment_types')
-        all_segment_types = []
+        models.WikilegisSegmentType.objects.all().delete()
         for data in json_data:
             segment_type = self.fill_object_data(models.WikilegisSegmentType,
                                                  data)
             segment_type.save()
-            all_segment_types.append(segment_type.id)
-
-        models.WikilegisSegmentType.objects.all().exclude(
-            id__in=all_segment_types).delete()
 
     def fetch_bills(self):
         json_data = self.get_json_data('bills')
-        all_bills = []
+        models.WikilegisBill.objects.all().delete()
         for data in json_data:
             bill = self.fill_object_data(models.WikilegisBill, data)
             bill.save()
-            all_bills.append(bill.id)
-
-        models.WikilegisBill.objects.all().exclude(id__in=all_bills).delete()
 
     def fetch_segments(self, json_data=None):
-        if not json_data:
+        if json_data is not None:
             json_data = self.get_json_data('segments')
+            models.WikilegisSegment.objects.all().delete()
+
         retry = False
-        all_segments = []
         for data in json_data:
             segment = self.fill_object_data(models.WikilegisSegment, data)
             try:
                 segment.save()
-                all_segments.append(segment.id)
             except IntegrityError:
                 retry = True
                 continue
@@ -152,19 +144,13 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
         if retry:
             self.fetch_segments(json_data)
 
-        models.WikilegisSegment.objects.all().exclude(
-            id__in=all_segments).delete()
-
     def fetch_comments(self):
         json_data = self.get_json_data('comments')
-        all_comments = []
+        models.WikilegisComment.objects.all().delete()
+
         for data in json_data:
             comment = self.fill_object_data(models.WikilegisComment, data)
             comment.save()
-            all_comments.append(comment.id)
-
-        models.WikilegisComment.objects.all().exclude(
-            id__in=all_comments).delete()
 
     def fetch_users(self):
         json_data = self.get_json_data('users')
