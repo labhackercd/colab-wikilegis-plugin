@@ -1,6 +1,6 @@
 from requests.exceptions import ConnectionError
 from django.db.models.fields import DateTimeField
-from django.db import IntegrityError
+from django.db import IntegrityError, OperationalError
 from colab.plugins.data import PluginDataImporter
 from django.utils.dateparse import parse_datetime
 from django.contrib.auth import get_user_model
@@ -68,7 +68,6 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
 
                 if field.name == 'author':
                     author = data['author']
-                    print author
                     if author:
                         user = User.objects.get(email=author['email'])
                     else:
@@ -115,56 +114,46 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
 
     def fetch_segment_types(self):
         json_data = self.get_json_data('segment_types')
-        all_segment_types = []
         for data in json_data:
             segment_type = self.fill_object_data(models.WikilegisSegmentType,
                                                  data)
             segment_type.save()
-            all_segment_types.append(segment_type.id)
-
-        models.WikilegisSegmentType.objects.all().exclude(
-            id__in=all_segment_types).delete()
 
     def fetch_bills(self):
         json_data = self.get_json_data('bills')
-        all_bills = []
         for data in json_data:
             bill = self.fill_object_data(models.WikilegisBill, data)
             bill.save()
-            all_bills.append(bill.id)
-
-        models.WikilegisBill.objects.all().exclude(id__in=all_bills).delete()
 
     def fetch_segments(self, json_data=None):
-        if not json_data:
+        if json_data is None:
             json_data = self.get_json_data('segments')
+
         retry = False
-        all_segments = []
+        retry_data = []
         for data in json_data:
-            segment = self.fill_object_data(models.WikilegisSegment, data)
-            try:
-                segment.save()
-                all_segments.append(segment.id)
-            except IntegrityError:
-                retry = True
-                continue
+            while True:
+                segment = self.fill_object_data(models.WikilegisSegment, data)
+                try:
+                    segment.save()
+                    break
+                except IntegrityError:
+                    retry = True
+                    retry_data = [data] + retry_data
+                    break
+                    continue
+                except OperationalError:
+                    pass
 
         if retry:
-            self.fetch_segments(json_data)
-
-        models.WikilegisSegment.objects.all().exclude(
-            id__in=all_segments).delete()
+            self.fetch_segments(retry_data)
 
     def fetch_comments(self):
         json_data = self.get_json_data('comments')
-        all_comments = []
+
         for data in json_data:
             comment = self.fill_object_data(models.WikilegisComment, data)
             comment.save()
-            all_comments.append(comment.id)
-
-        models.WikilegisComment.objects.all().exclude(
-            id__in=all_comments).delete()
 
     def fetch_users(self):
         json_data = self.get_json_data('users')
@@ -175,6 +164,11 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
         return user_list
 
     def fetch_data(self):
+        models.WikilegisComment.objects.all().delete()
+        models.WikilegisSegmentType.objects.all().delete()
+        models.WikilegisSegment.objects.all().delete()
+        models.WikilegisBill.objects.all().delete()
+
         self.fetch_bills()
         self.fetch_segment_types()
         self.fetch_segments()
