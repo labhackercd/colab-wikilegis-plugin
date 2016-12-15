@@ -7,9 +7,9 @@ class ColabWikilegisPluginProxyView(ColabProxyView):
     diazo_theme_template = 'proxy/wikilegis.html'
     rewrite = (
         (r'^/wikilegis/accounts/login/?$', r'{}'.format(settings.LOGIN_URL)),
-        (r'^/wikilegis/accounts/logout/?$', r'^/account/logout/?$'),
-        (r'^/wikilegis/widget/login/?$', r'^/widget/login/?$'),
-        (r'^/wikilegis/widget/signup/?$', r'^/widget/signup/?$'),
+        (r'^/wikilegis/accounts/logout(.*)$', r'{}\1'.format('/account/logout')),
+        (r'^/wikilegis/widget/login(.*)$', r'{}\1'.format('/widget/login')),
+        (r'^/wikilegis/widget/signup(.*)$', r'{}\1'.format('/widget/signup')),
     )
 
     def get_proxy_request_headers(self, request):
