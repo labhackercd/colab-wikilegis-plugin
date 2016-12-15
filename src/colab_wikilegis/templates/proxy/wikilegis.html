@@ -29,7 +29,7 @@
       <link rel="stylesheet" href="{% static 'scss/wikilegis/restyle.scss' %}" type="text/x-scss" />
     {% endcompress %}
   </head>
-  <body class="{% if 'report' in request.path %}report{% endif %}">
+  <body class="{% if 'report' in request.path %}report{% endif %} {% if 'widget' in request.path %}widget{% endif %}">
   <nav class="navigation ">
     {% include "navigation.html" %}
   </nav>
