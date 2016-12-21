@@ -29,13 +29,31 @@
       <link rel="stylesheet" href="{% static 'scss/wikilegis/restyle.scss' %}" type="text/x-scss" />
     {% endcompress %}
   </head>
-  <body class="{% if 'report' in request.path %}report{% endif %} {% if 'widget' in request.path %}widget{% endif %}">
-  <nav class="navigation ">
-    {% include "navigation.html" %}
-  </nav>
+
+  <body class="has-edem-nav {% if 'report' in request.path %}report{% endif %} {% if 'widget' in request.path %}widget{% endif %}">
+
+    <nav class="navigation ">
+      {% include "navigation.html" %}
+    </nav>
+
     <div id="template-body">
 
     </div>
+
     <script type="text/javascript" src="{% static 'js/scripts.js' %}"></script>
+    <script>
+      var stickyNavbar = $('.wiki-navbar').offset().top;
+
+      function colala() {
+        if ($(window).scrollTop() >= stickyNavbar) {
+          $('.has-edem-nav').addClass('wiki-fixed');
+        } else {
+          $('.has-edem-nav').removeClass('wiki-fixed');
+        }
+      }
+
+      colala();
+      $(window).on('scroll', colala);
+    </script>
   </body>
 </html>
