@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="{% static 'fontastic-labhacker/styles.css' %}" />
     {% compress css %}
       <link rel="stylesheet" href="{% static 'scss/navigation.scss' %}" type="text/x-scss" />
+      <link rel="stylesheet" href="{% static 'scss/site-wrapper.scss' %}" type="text/x-scss" />
       <link rel="stylesheet" href="{% static 'scss/wikilegis/restyle.scss' %}" type="text/x-scss" />
     {% endcompress %}
   </head>
@@ -36,24 +37,11 @@
       {% include "navigation.html" %}
     </nav>
 
-    <div id="template-body">
+    <div id="template-body" class="site-wrapper">
 
     </div>
 
+    <script type="text/javascript" src="https://npmcdn.com/headroom.js@0.9.3/dist/headroom.min.js"></script>
     <script type="text/javascript" src="{% static 'js/scripts.js' %}"></script>
-    <script>
-      var stickyNavbar = $('.wiki-navbar').offset().top;
-
-      function colala() {
-        if ($(window).scrollTop() >= stickyNavbar) {
-          $('.has-edem-nav').addClass('wiki-fixed');
-        } else {
-          $('.has-edem-nav').removeClass('wiki-fixed');
-        }
-      }
-
-      colala();
-      $(window).on('scroll', colala);
-    </script>
   </body>
 </html>
