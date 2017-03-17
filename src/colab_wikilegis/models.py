@@ -12,35 +12,11 @@ BILL_STATUS_CHOICES = (
     ('closed', _('Closed'))
 )
 
-BILL_THEMES_CHOICES = (
-    ('documento', _('Others')),
-    ('adm-publica', _('Public Administration')),
-    ('agropecuaria', _('Farming')),
-    ('assistencia-social', _('Social Assistance')),
-    ('cidades', _('Cities')),
-    ('ciencia', _('Science')),
-    ('comunicacao', _('Communication')),
-    ('consumidor', _('Consumer')),
-    ('cultura', _('Culture')),
-    ('direito-e-justica', _('Law and Justice')),
-    ('direitos-humanos', _('Human Rights')),
-    ('economia', _('Economy')),
-    ('educacao', _('Education')),
-    ('esportes', _('Sports')),
-    ('familia', _('Family')),
-    ('industria', _('Industry')),
-    ('institucional', _('Institutional')),
-    ('meio-ambiente', _('Environment')),
-    ('participacao_e_transparencia', _('Participation and Transparency')),
-    ('politica', _('Policy')),
-    ('previdencia', _('Foresight')),
-    ('relacoes-exteriores', _('Foreign Affairs')),
-    ('saude', _('Health')),
-    ('seguranca', _('Security')),
-    ('trabalho', _('Work')),
-    ('transporte-e-transito', _('Transportation and Transit')),
-    ('turismo', _('Tourism'))
-)
+
+class WikilegisBillTheme(models.Model):
+    id = models.IntegerField(primary_key=True)
+    description = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=50)
 
 
 class WikilegisBill(models.Model):
@@ -52,11 +28,16 @@ class WikilegisBill(models.Model):
     reporting_member = models.ForeignKey(User, null=True)
     status = models.CharField(max_length=999,
                               choices=BILL_STATUS_CHOICES, default='1')
-    theme = models.CharField(max_length=999, choices=BILL_THEMES_CHOICES,
-                             default='documento')
+    theme = models.ForeignKey('WikilegisBillTheme')
     closing_date = models.DateField(null=True, blank=True)
     created = models.DateTimeField(editable=False)
     modified = models.DateTimeField(editable=False)
+
+    votes_count = models.IntegerField()
+    upvote_count = models.IntegerField()
+    downvote_count = models.IntegerField()
+    comments_count = models.IntegerField()
+    amendments_count = models.IntegerField()
 
     def get_url(self):
         prefix = helpers.get_plugin_prefix('colab_wikilegis', regex=False)
