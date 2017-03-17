@@ -19,26 +19,33 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
 
     def get_request_url(self, path, **kwargs):
         upstream = self.config.get('upstream')
-        kwargs['api_key'] = self.config.get('api_key')
-        params = urllib.urlencode(kwargs)
+        if 'api_key' not in path:
+            kwargs['api_key'] = self.config.get('api_key')
+            params = '?' + urllib.urlencode(kwargs)
+        else:
+            params = ''
 
         if upstream[-1] == '/':
             upstream = upstream[:-1]
 
-        return u'{}{}?{}'.format(upstream, path, params)
+        return u'{}{}{}'.format(upstream, path, params)
 
-    def get_json_data(self, resource_name, page=1):
-        api_url = '/api/{}/'.format(resource_name)
-        url = self.get_request_url(api_url, page=page)
+    def get_json_data(self, resource_name='', next_path=''):
+        if not next_path and resource_name:
+            api_url = '/api/v1/{}/'.format(resource_name)
+            url = self.get_request_url(api_url)
+        else:
+            url = self.get_request_url(next_path)
         full_json_data = []
-
+        print url
         try:
             response = requests.get(url)
             json_data = response.json()
-            full_json_data.extend(json_data['results'])
-            if json_data['next']:
-                page += 1
-                json_page = self.get_json_data(resource_name, page)
+            full_json_data.extend(json_data['objects'])
+            if json_data['meta']['next']:
+                json_page = self.get_json_data(
+                    next_path=json_data['meta']['next']
+                )
                 full_json_data.extend(json_page)
         except ConnectionError:
             pass
@@ -73,6 +80,13 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
                     else:
                         user = None
                     obj.author = user
+                    continue
+
+                if field.name == 'theme':
+                    theme = models.WikilegisBillTheme.objects.get(
+                        slug=data['theme']['slug']
+                    )
+                    obj.theme = theme
                     continue
 
                 if field.name == 'reporting_member':
@@ -120,7 +134,7 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
             segment_type.save()
 
     def fetch_bills(self):
-        json_data = self.get_json_data('bills')
+        json_data = self.get_json_data('bill')
         for data in json_data:
             bill = self.fill_object_data(models.WikilegisBill, data)
             bill.save()
@@ -155,8 +169,14 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
             comment = self.fill_object_data(models.WikilegisComment, data)
             comment.save()
 
+    def fetch_themes(self):
+        json_data = self.get_json_data('billtheme')
+        for data in json_data:
+            theme = self.fill_object_data(models.WikilegisBillTheme, data)
+            theme.save()
+
     def fetch_users(self):
-        json_data = self.get_json_data('users')
+        json_data = self.get_json_data('user')
         user_list = []
         for data in json_data:
             user = self.fill_object_data(User, data)
@@ -164,12 +184,8 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
         return user_list
 
     def fetch_data(self):
-        models.WikilegisComment.objects.all().delete()
-        models.WikilegisSegmentType.objects.all().delete()
-        models.WikilegisSegment.objects.all().delete()
+        models.WikilegisBillTheme.objects.all().delete()
         models.WikilegisBill.objects.all().delete()
 
+        self.fetch_themes()
         self.fetch_bills()
-        self.fetch_segment_types()
-        self.fetch_segments()
-        self.fetch_comments()
