@@ -22,6 +22,43 @@ class Migration(migrations.Migration):
             },
             bases=(models.Model,),
         ),
+        migrations.RemoveField(
+            model_name='wikilegiscomment',
+            name='user',
+        ),
+        migrations.DeleteModel(
+            name='WikilegisComment',
+        ),
+        migrations.RemoveField(
+            model_name='wikilegissegment',
+            name='author',
+        ),
+        migrations.RemoveField(
+            model_name='wikilegissegment',
+            name='bill',
+        ),
+        migrations.RemoveField(
+            model_name='wikilegissegment',
+            name='parent',
+        ),
+        migrations.RemoveField(
+            model_name='wikilegissegment',
+            name='replaced',
+        ),
+        migrations.RemoveField(
+            model_name='wikilegissegment',
+            name='type',
+        ),
+        migrations.DeleteModel(
+            name='WikilegisSegment',
+        ),
+        migrations.DeleteModel(
+            name='WikilegisSegmentType',
+        ),
+        migrations.RemoveField(
+            model_name='wikilegisbill',
+            name='theme',
+        ),
         migrations.AddField(
             model_name='wikilegisbill',
             name='amendments_count',
@@ -51,11 +88,5 @@ class Migration(migrations.Migration):
             name='votes_count',
             field=models.IntegerField(default=0),
             preserve_default=False,
-        ),
-        migrations.AlterField(
-            model_name='wikilegisbill',
-            name='theme',
-            field=models.ForeignKey(to='colab_wikilegis.WikilegisBillTheme'),
-            preserve_default=True,
         ),
     ]

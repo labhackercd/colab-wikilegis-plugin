@@ -28,7 +28,7 @@ class WikilegisBill(models.Model):
     reporting_member = models.ForeignKey(User, null=True)
     status = models.CharField(max_length=999,
                               choices=BILL_STATUS_CHOICES, default='1')
-    theme = models.ForeignKey('WikilegisBillTheme')
+    theme = models.ForeignKey('WikilegisBillTheme', null=True)
     closing_date = models.DateField(null=True, blank=True)
     created = models.DateTimeField(editable=False)
     modified = models.DateTimeField(editable=False)
