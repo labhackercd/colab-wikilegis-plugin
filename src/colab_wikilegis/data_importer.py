@@ -137,6 +137,7 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
         json_data = self.get_json_data('bill')
         for data in json_data:
             bill = self.fill_object_data(models.WikilegisBill, data)
+            print bill.status
             bill.save()
 
     def fetch_segments(self, json_data=None):
