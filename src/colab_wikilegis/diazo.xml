@@ -2,7 +2,7 @@
     xmlns="http://namespaces.plone.org/diazo"
     xmlns:css="http://namespaces.plone.org/diazo/css"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <after css:theme-children="#template-head" css:content-children="head" />
+    <before css:theme-children="#template-head" css:content-children="head" />
     <after css:theme-children="#template-body" css:content-children="body" />
     <drop css:content=".login-or-signup" />
     <drop css:content=".language-selector" />
