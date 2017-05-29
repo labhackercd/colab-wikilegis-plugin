@@ -28,6 +28,9 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
         if upstream[-1] == '/':
             upstream = upstream[:-1]
 
+        if upstream in path:
+            upstream = ''
+
         return u'{}{}{}'.format(upstream, path, params)
 
     def get_json_data(self, resource_name='', next_path=''):
