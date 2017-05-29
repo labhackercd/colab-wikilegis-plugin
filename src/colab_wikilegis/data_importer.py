@@ -5,7 +5,6 @@ from colab.plugins.data import PluginDataImporter
 from django.utils.dateparse import parse_datetime
 from django.contrib.auth import get_user_model
 from colab_wikilegis import models
-from 
 import requests
 import urllib
 import logging
