@@ -5,6 +5,7 @@ from colab.plugins.data import PluginDataImporter
 from django.utils.dateparse import parse_datetime
 from django.contrib.auth import get_user_model
 from colab_wikilegis import models
+from 
 import requests
 import urllib
 import logging
@@ -28,8 +29,8 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
         if upstream[-1] == '/':
             upstream = upstream[:-1]
 
-        if upstream in path:
-            upstream = ''
+        if "/wikilegis" in path:
+            path = path.replace("/wikilegis", "")
 
         return u'{}{}{}'.format(upstream, path, params)
 
