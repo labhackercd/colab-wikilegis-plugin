@@ -86,7 +86,7 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
 
                 if field.name == 'segment_type':
                     segment_type = models.WikilegisSegmentType.objects.get(
-                        slug=data['segment_type']['name']
+                        name=data['segment_type']['name']
                     )
                     obj.segment_type = segment_type
                     continue
