@@ -84,6 +84,13 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
                     obj.author = user
                     continue
 
+                if field.name == 'segment_type':
+                    segment_type = models.WikilegisSegmentType.objects.get(
+                        slug=data['segment_type']['name']
+                    )
+                    obj.segment_type = segment_type
+                    continue
+
                 if field.name == 'theme':
                     theme = models.WikilegisBillTheme.objects.get(
                         slug=data['theme']['slug']
