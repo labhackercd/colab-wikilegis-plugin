@@ -108,10 +108,6 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
                     obj.user = user
                     continue
 
-                if field.name == 'parent':
-                    obj.parent_id = data['parent']
-                    continue
-
                 if field.name == 'replaced':
                     obj.replaced_id = data['replaced']
                     continue

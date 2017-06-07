@@ -24,7 +24,6 @@ class WikilegisBill(models.Model):
     title = models.CharField(max_length=999)
     epigraph = models.CharField(max_length=999, null=True)
     description = models.CharField(max_length=999)
-    reporting_member = models.ForeignKey(User, null=True)
     status = models.CharField(max_length=999,
                               choices=BILL_STATUS_CHOICES, default='1')
     theme = models.ForeignKey('WikilegisBillTheme', null=True)
