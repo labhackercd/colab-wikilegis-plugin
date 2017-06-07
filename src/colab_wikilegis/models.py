@@ -60,8 +60,6 @@ class WikilegisSegment(models.Model):
 
     id = models.IntegerField(primary_key=True)
     bill = models.ForeignKey('WikilegisBill', related_name='segments')
-    parent = models.ForeignKey('self', related_name='children',
-                               null=True, blank=True)
     segment_type = models.ForeignKey('WikilegisSegmentType')
     number = models.PositiveIntegerField(default=0, null=True, blank=True)
     content = models.TextField()

@@ -121,7 +121,10 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
                     continue
 
                 if field.name == 'bill':
-                    obj.bill_id = data['bill']
+                    bill = models.WikilegisBill.objects.get(
+                        id=data['bill']['id']
+                    )
+                    obj.bill = bill
                     continue
 
                 if isinstance(field, DateTimeField):
