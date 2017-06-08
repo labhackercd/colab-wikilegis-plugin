@@ -1,56 +1,50 @@
-# from haystack import indexes
-# from colab_wikilegis import models
+from haystack import indexes
+from colab_wikilegis import models
 
 
-# class WikilegisBillIndex(indexes.SearchIndex, indexes.Indexable):
-#     text = indexes.EdgeNgramField(document=True, use_template=True,
-#                                   stored=False)
-#     type = indexes.EdgeNgramField()
+class WikilegisBillIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.EdgeNgramField(document=True, use_template=True,
+                                  stored=False)
+    type = indexes.EdgeNgramField()
 
-#     # Model fields
-#     title = indexes.EdgeNgramField(model_attr='title')
-#     epigraph = indexes.EdgeNgramField(model_attr='epigraph', null=True)
-#     description = indexes.EdgeNgramField(model_attr='description')
-#     reporting_member = indexes.EdgeNgramField(
-#         model_attr='get_reporting_member')
-#     status = indexes.EdgeNgramField(model_attr='get_status')
-#     theme = indexes.EdgeNgramField(model_attr='get_theme')
-#     url = indexes.EdgeNgramField(model_attr='get_url')
+    # Model fields
+    title = indexes.EdgeNgramField(model_attr='title')
+    epigraph = indexes.EdgeNgramField(model_attr='epigraph', null=True)
+    description = indexes.EdgeNgramField(model_attr='description')
+    status = indexes.EdgeNgramField(model_attr='get_status')
+    theme = indexes.EdgeNgramField(model_attr='get_theme')
+    url = indexes.EdgeNgramField(model_attr='get_url')
 
-#     def get_model(self):
-#         return models.WikilegisBill
+    def get_model(self):
+        return models.WikilegisBill
 
-#     def prepare_type(self, obj):
-#         return u'bill'
+    def prepare_type(self, obj):
+        return u'bill'
 
-#     def index_queryset(self, using=None):
-#         return self.get_model().objects.exclude(status='draft')
+    def index_queryset(self, using=None):
+        return self.get_model().objects.exclude(status='draft')
 
 
-# class WikilegisSegmentIndex(indexes.SearchIndex, indexes.Indexable):
-#     text = indexes.EdgeNgramField(document=True, use_template=True,
-#                                   stored=False)
-#     type = indexes.EdgeNgramField()
+class WikilegisSegmentIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.EdgeNgramField(document=True, use_template=True,
+                                  stored=False)
+    type = indexes.EdgeNgramField()
 
-#     # Model fields
-#     segment_type = indexes.EdgeNgramField(model_attr='get_segment_type')
-#     content = indexes.EdgeNgramField(model_attr='content')
-#     parent = indexes.EdgeNgramField(model_attr='parent', null=True)
-#     author = indexes.EdgeNgramField(model_attr='get_author', null=True)
-#     bill = indexes.EdgeNgramField(model_attr='get_bill')
-#     number = indexes.EdgeNgramField(model_attr='number', null=True)
-#     original = indexes.BooleanField(model_attr='original')
-#     replaced = indexes.EdgeNgramField(model_attr='replaced', null=True)
-#     url = indexes.EdgeNgramField(model_attr='get_url')
+    # Model fields
+    segment_type = indexes.EdgeNgramField(model_attr='get_segment_type')
+    content = indexes.EdgeNgramField(model_attr='content')
+    bill = indexes.EdgeNgramField(model_attr='get_bill')
+    number = indexes.EdgeNgramField(model_attr='number', null=True)
+    url = indexes.EdgeNgramField(model_attr='get_url')
 
-#     def get_model(self):
-#         return models.WikilegisSegment
+    def get_model(self):
+        return models.WikilegisSegment
 
-#     def prepare_type(self, obj):
-#         return u'segment'
+    def prepare_type(self, obj):
+        return u'segment'
 
-#     def index_queryset(self, using=None):
-#         return self.get_model().objects.exclude(bill__status='draft')
+    def index_queryset(self, using=None):
+        return self.get_model().objects.exclude(bill__status='draft')
 
 
 # class WikilegisCommentIndex(indexes.SearchIndex, indexes.Indexable):

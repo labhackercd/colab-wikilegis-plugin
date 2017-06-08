@@ -84,6 +84,13 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
                     obj.author = user
                     continue
 
+                if field.name == 'segment_type':
+                    segment_type = models.WikilegisSegmentType.objects.get(
+                        name=data['segment_type']['name']
+                    )
+                    obj.segment_type = segment_type
+                    continue
+
                 if field.name == 'theme':
                     theme = models.WikilegisBillTheme.objects.get(
                         slug=data['theme']['slug']
@@ -101,10 +108,6 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
                     obj.user = user
                     continue
 
-                if field.name == 'parent':
-                    obj.parent_id = data['parent']
-                    continue
-
                 if field.name == 'replaced':
                     obj.replaced_id = data['replaced']
                     continue
@@ -114,7 +117,10 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
                     continue
 
                 if field.name == 'bill':
-                    obj.bill_id = data['bill']
+                    bill = models.WikilegisBill.objects.get(
+                        id=data['bill']['id']
+                    )
+                    obj.bill = bill
                     continue
 
                 if isinstance(field, DateTimeField):
@@ -129,7 +135,7 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
         return obj
 
     def fetch_segment_types(self):
-        json_data = self.get_json_data('segment_types')
+        json_data = self.get_json_data('segmenttype')
         for data in json_data:
             segment_type = self.fill_object_data(models.WikilegisSegmentType,
                                                  data)
@@ -143,7 +149,7 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
 
     def fetch_segments(self, json_data=None):
         if json_data is None:
-            json_data = self.get_json_data('segments')
+            json_data = self.get_json_data('billsegment')
 
         retry = False
         retry_data = []
@@ -188,6 +194,10 @@ class ColabWikilegisPluginDataImporter(PluginDataImporter):
     def fetch_data(self):
         models.WikilegisBillTheme.objects.all().delete()
         models.WikilegisBill.objects.all().delete()
+        models.WikilegisSegmentType.objects.all().delete()
+        models.WikilegisSegment.objects.all().delete()
 
         self.fetch_themes()
         self.fetch_bills()
+        self.fetch_segment_types()
+        self.fetch_segments()
