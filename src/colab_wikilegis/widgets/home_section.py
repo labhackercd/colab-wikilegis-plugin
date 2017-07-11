@@ -9,8 +9,8 @@ class WikilegisHomeSectionWidget(Widget):
 
     def generate_content(self, **kwargs):
         context = kwargs.get('context')
-        wikilegis_data = WikilegisBill.objects.filter(status='published')
-        wikilegis_data = wikilegis_data.order_by('-modified')[:10]
+        wikilegis_data = WikilegisBill.objects.exclude(status='draft')
+        wikilegis_data = wikilegis_data.order_by('-status', '-modified')[:10]
         context['wikilegis_data'] = wikilegis_data
 
         self.content = render_to_string(self.template, context)
