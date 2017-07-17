@@ -1,4 +1,4 @@
-{% load staticfiles edem_utils %}
+{% load staticfiles %}
 
 <section class="section section--wikilegis">
   <div class="e-row e-expanded">
@@ -23,12 +23,6 @@
             <a class="info-card__link" href="{{bill.get_url}}">
               <li class="info-card info-card--wikilegis">
                 <div class="info-card__header">
-                  {# XXX: Add different style when the category is one of the user's prefered themes #}
-                  {% if user.is_authenticated %}
-                    {% get_prefered_themes_list as prefered_themes %}
-                    {% if bill.theme.slug in prefered_themes %}
-                    {% endif %}
-                  {% endif %}
                   {% if bill.status == "closed" %}
                   <div class="info-card__icon info-card__icon--closed"><i class="icon icon-{{bill.theme.slug}}"></i></div>
                   {% else %}
