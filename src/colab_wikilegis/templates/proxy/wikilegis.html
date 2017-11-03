@@ -10,5 +10,7 @@
   class="{% if 'report' in request.path %}report{% endif %}{% if 'widget' in request.path %}widget{% endif %}"
 {% endblock body_properties %}
 
-{% block jquery_call %}
-{% endblock jquery_call %}
+{% block scripts %}
+  {{ block.super }}
+  <script src="{% static 'js/edem-wikilegis-plugin.js' %}"></script>
+{% endblock scripts %}
