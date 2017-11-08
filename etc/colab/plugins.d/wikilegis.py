@@ -10,3 +10,9 @@ urls = {
     'prefix': '^wikilegis/',
     'login': '/wikilegis/accounts/login/',
 }
+
+settings_variables = {
+    'COLAB_STATICS': [
+        '/colab-plugins/wikilegis/src/colab_wikilegis/static'
+    ]
+}
