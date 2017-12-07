@@ -12,7 +12,7 @@ tests_require = ['mock']
 
 setup(
     name="colab-wikilegis",
-    version='0.3.0',
+    version='0.4.0',
     author='labhackercd',
     author_email='labhackercd@gmail.com',
     url='https://github.com/labhackercd/colab-wikilegis-plugin',
